@@ -9,7 +9,7 @@ import (
 )
 
 func createTable(batteryDB *sql.DB) {
-	createBatteryTable := `CREATE TABLE "battery_charge" (
+	createBatteryTable := `CREATE TABLE IF NOT EXISTS "battery_charge" (
 		"id"	INTEGER NOT NULL UNIQUE,
 		"charge"	INTEGER NOT NULL,
 		"timestamp"	INTEGER NOT NULL,
