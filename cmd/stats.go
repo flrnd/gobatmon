@@ -23,8 +23,8 @@ var statsCmd = &cobra.Command{
 		current, err := ioutil.ReadFile(energyNowPath)
 		Check(err)
 		energyFull, err := ioutil.ReadFile(energyFullPath)
-		check(err)
-		percentage := calculateBatteryPercentage(parseBatteryValue(current), parseBatteryValue(energyFull))
+		Check(err)
+		percentage := CalculateBatteryPercentage(ParseBatteryValue(current), ParseBatteryValue(energyFull))
 		fmt.Printf("%d%%\n", percentage)
 	},
 }
