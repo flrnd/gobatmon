@@ -8,15 +8,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func getParameterPath(p string) string {
+	var batteryPath = "/sys/class/power_supply/BAT0/"
+	return fmt.Sprintf("%s%s", batteryPath, p)
+}
+
 func init() {
 	rootCmd.AddCommand(statsCmd)
 }
-
-const cycleCountPath = "/sys/class/power_supply/BAT0/cycle_count"
-const energyFullDesignPath = "/sys/class/power_supply/BAT0/energy_full_design"
-const energyFullPath = "/sys/class/power_supply/BAT0/energy_full"
-const energyNowPath = "/sys/class/power_supply/BAT0/energy_now"
-const powerNowPath = "/sys/class/power_supply/BAT0/power_now"
 
 var statsCmd = &cobra.Command{
 	Use:   "stats",
@@ -25,28 +24,31 @@ var statsCmd = &cobra.Command{
 								full power, full fuck you...`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Read design full charge
-		fullDesign, err := ioutil.ReadFile(energyFullDesignPath)
+		fullCapacityDesign, err := ioutil.ReadFile(getParameterPath("energy_full_design"))
 		util.Check(err)
+
 		// Read full charge
-		energyFull, err := ioutil.ReadFile(energyFullPath)
+		fullCapacity, err := ioutil.ReadFile(getParameterPath("energy_full"))
 		util.Check(err)
-		// Read the current battery value
-		current, err := ioutil.ReadFile(energyNowPath)
+
+		// Read the currentCharge battery value
+		currentCharge, err := ioutil.ReadFile(getParameterPath("energy_now"))
 		util.Check(err)
-		percentage := util.CalculateBatteryPercentage(util.ParseBatteryValue(current), util.ParseBatteryValue(energyFull))
-		// read power
-		power, err := ioutil.ReadFile(powerNowPath)
+		currentChargePercentage := util.CalculateBatteryPercentage(util.ParseBatteryValue(currentCharge), util.ParseBatteryValue(fullCapacity))
+
+		// read dischargePower
+		dischargePower, err := ioutil.ReadFile(getParameterPath("power_now"))
 		util.Check(err)
 
 		// read cycles
-		cycles, err := ioutil.ReadFile(cycleCountPath)
+		cycles, err := ioutil.ReadFile(getParameterPath("cycle_count"))
 		util.Check(err)
 
 		// print the battery stats
-		fmt.Printf("Full design capacity: %dmWh\n", util.ParseBatteryValue(fullDesign))
-		fmt.Printf("Full charge capacity: %dmWh\n", util.ParseBatteryValue(energyFull))
-		fmt.Printf("Current charge at: %d%%\n", percentage)
+		fmt.Printf("Full design capacity: %dmWh\n", util.ParseBatteryValue(fullCapacityDesign))
+		fmt.Printf("Full charge capacity: %dmWh\n", util.ParseBatteryValue(fullCapacity))
+		fmt.Printf("Current charge at: %d%%\n", currentChargePercentage)
 		fmt.Printf("Cycle count: %s", string(cycles))
-		fmt.Printf("Current power discharge at: %.2fW\n", util.ParseMilliWats(util.ParseBatteryValue(power)))
+		fmt.Printf("Current power discharge at: %.2fW\n", util.ParseMilliWats(util.ParseBatteryValue(dischargePower)))
 	},
 }
