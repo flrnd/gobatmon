@@ -2,34 +2,37 @@ package main
 
 import (
 	"database/sql"
-	"log"
-	"os"
 
+	"github.com/flrnd/gobatmon/cmd"
+	"github.com/flrnd/gobatmon/util"
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
 
-	homeDir, err := os.UserHomeDir()
-	check(err)
+	/*
+		homeDir, err := os.UserHomeDir()
+		util.Check(err)
 
-	databasePath := homeDir + "/.config/batmon/battery.db"
+		databasePath := homeDir + "/.config/batmon/battery.db"
 
-	// Check if database exists
-	if _, err := os.Stat(databasePath); os.IsNotExist(err) {
-		os.MkdirAll(homeDir+"/.config/batmon", 0755)
-		log.Println("Creating the database")
-		file, err := os.Create(databasePath)
-		check(err)
-		file.Close()
-		log.Println("Database created")
-	}
+		// Check if database exists
+		if _, err := os.Stat(databasePath); os.IsNotExist(err) {
+			os.MkdirAll(homeDir+"/.config/batmon", 0755)
+			log.Println("Creating the database")
+			file, err := os.Create(databasePath)
+			util.Check(err)
+			file.Close()
+			log.Println("Database created")
+		}
 
-	// Open the database
-	batteryDB, err := sql.Open("sqlite3", databasePath)
-	check(err)
-	defer batteryDB.Close()
-	createTable(batteryDB)
+		// Open the database
+		batteryDB, err := sql.Open("sqlite3", databasePath)
+		util.Check(err)
+		defer batteryDB.Close()
+		createTable(batteryDB)
+	*/
+	cmd.Execute()
 }
 
 func createTable(batteryDB *sql.DB) {
@@ -43,6 +46,6 @@ func createTable(batteryDB *sql.DB) {
 	);`
 
 	statement, err := batteryDB.Prepare(createBatteryTable)
-	check(err)
+	util.Check(err)
 	statement.Exec()
 }
