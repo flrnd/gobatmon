@@ -3,11 +3,14 @@ package cmd
 import (
 	"fmt"
 	"io/ioutil"
-	"os"
 
 	"github.com/flrnd/gobatmon/util"
 	"github.com/spf13/cobra"
 )
+
+func init() {
+	rootCmd.AddCommand(statsCmd)
+}
 
 const cycleCountPath = "/sys/class/power_supply/BAT0/cycle_count"
 const energyFullDesignPath = "/sys/class/power_supply/BAT0/energy_full_design"
@@ -46,11 +49,4 @@ var statsCmd = &cobra.Command{
 		fmt.Printf("Cycle count: %s", string(cycles))
 		fmt.Printf("Current power discharge at: %.2fW\n", util.ParseMilliWats(util.ParseBatteryValue(power)))
 	},
-}
-
-func Execute() {
-	if err := statsCmd.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
 }
