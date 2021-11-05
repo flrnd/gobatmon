@@ -9,13 +9,11 @@ import (
 )
 
 func createTable(batteryDB *sql.DB) {
-	createBatteryTable := `CREATE TABLE IF NOT EXISTS battery (
-		"id" INTEGER PRIMARY KEY AUTOINCREMENT,
-		"percentage" INTEGER NOT NULL,
-		"timestamp" INTEGER NOT NULL,
-		"FOREIGN KEY(percentage) REFERENCES percentage(id),
-		"FOREIGN KEY(timestamp) REFERENCES timestamp(id),
-	);`
+	createBatteryTable := `CREATE TABLE "battery_charge" (
+		"id"	INTEGER NOT NULL UNIQUE,
+		"charge"	INTEGER NOT NULL,
+		"timestamp"	INTEGER NOT NULL,
+		PRIMARY KEY("id" AUTOINCREMENT));`
 
 	statement, err := batteryDB.Prepare(createBatteryTable)
 	Check(err)
