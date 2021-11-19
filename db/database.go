@@ -55,11 +55,30 @@ func Insert(charge string, timestamp time.Time) {
 	fmt.Printf("created timestamp: %d\n %s - %s\n", id, timestamp.UTC(), charge)
 }
 
+func List() {
+	db, err := sql.Open("sqlite3", Path())
+	util.Check(err)
+	defer db.Close()
+
+	rows, err := db.Query("SELECT * FROM battery_charge")
+	util.Check(err)
+
+	for rows.Next() {
+		var id int
+		var charge string
+		var timestamp time.Time
+		err = rows.Scan(&id, &charge, &timestamp)
+		util.Check(err)
+		fmt.Printf("id: %d charge :%s created: %s\n", id, charge, util.ParseTime(timestamp))
+	}
+	rows.Close()
+}
+
 func createTable(batteryDB *sql.DB) {
 	createBatteryTable := `CREATE TABLE IF NOT EXISTS "battery_charge" (
 		"id"	INTEGER NOT NULL UNIQUE,
-		"charge"	string NOT NULL,
-		"timestamp"	INTEGER NOT NULL,
+		"charge"	VARCHAR(2) NOT NULL,
+		"timestamp"	datetime NOT NULL,
 		PRIMARY KEY("id" AUTOINCREMENT));`
 
 	if statement, err := batteryDB.Prepare(createBatteryTable); err != nil {
