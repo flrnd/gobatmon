@@ -21,6 +21,7 @@ var lastCmd = &cobra.Command{
 		currentCharge := util.Stats().CurrentCharge
 		currentTime := time.Now()
 		_, charge, timestamp := db.Last()
-		fmt.Printf("%d%% discharge in %v", util.CalculateDischarge(currentCharge, charge), currentTime.Sub(timestamp))
+
+		fmt.Printf("%d%% discharge in %v\n", util.CalculateDischarge(currentCharge, charge), currentTime.Sub(timestamp))
 	},
 }
