@@ -21,7 +21,7 @@ Cycle count: 23
 
 ## TODO
 
-- [] Create project with proper issues and tasks.
-- [] Write systemd services for shutdown and boot.
-- [] Implement data schema for future graphs and analytics.
-- [] Add tests.
+- [ ] Create project with proper issues and tasks.
+- [ ] Write systemd services for shutdown and boot.
+- [ ] Implement data schema for future graphs and analytics.
+- [ ] Add tests.
