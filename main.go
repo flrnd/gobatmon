@@ -2,10 +2,10 @@ package main
 
 import (
 	"github.com/flrnd/gobatmon/cmd"
-	"github.com/flrnd/gobatmon/util"
+	"github.com/flrnd/gobatmon/db"
 )
 
 func main() {
-	util.InitDatabase()
+	db.Init()
 	cmd.Execute()
 }
