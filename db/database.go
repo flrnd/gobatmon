@@ -16,7 +16,7 @@ func Path() string {
 	return homeDir + defaultDbPath
 }
 
-func Init() error {
+func Init() {
 	homeDir, _ := os.UserHomeDir()
 	databasePath := Path()
 
@@ -24,7 +24,7 @@ func Init() error {
 		os.MkdirAll(homeDir+"/.config/batmon", 0755)
 		log.Println("Creating the database")
 		if file, err := os.Create(databasePath); err != nil {
-			return err
+			util.Check(err)
 		} else {
 			file.Close()
 			log.Println("Database created")
@@ -33,13 +33,12 @@ func Init() error {
 
 	// Open the database
 	if batteryDB, err := sql.Open("sqlite3", databasePath); err != nil {
-		return err
+		util.Check(err)
 	} else {
 		batteryDB.Close()
 		defer batteryDB.Close()
 		createTable(batteryDB)
 	}
-	return nil
 }
 
 func createTable(batteryDB *sql.DB) {
