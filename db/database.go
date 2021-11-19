@@ -52,7 +52,7 @@ func Insert(charge string, timestamp time.Time) {
 
 	id, err := res.LastInsertId()
 
-	fmt.Printf("created timestamp: %d\n %s - %s\n", id, timestamp.UTC(), charge)
+	fmt.Printf("created timestamp (%d) %s%% at %s\n", id, charge, util.ParseTime(timestamp))
 }
 
 func List() {
@@ -69,7 +69,7 @@ func List() {
 		var timestamp time.Time
 		err = rows.Scan(&id, &charge, &timestamp)
 		util.Check(err)
-		fmt.Printf("id: %d charge :%s created: %s\n", id, charge, util.ParseTime(timestamp))
+		fmt.Printf("id: %d charge: %s%% created: %s\n", id, charge, util.ParseTime(timestamp))
 	}
 	rows.Close()
 }
@@ -77,7 +77,7 @@ func List() {
 func createTable(batteryDB *sql.DB) {
 	createBatteryTable := `CREATE TABLE IF NOT EXISTS "battery_charge" (
 		"id"	INTEGER NOT NULL UNIQUE,
-		"charge"	VARCHAR(2) NOT NULL,
+		"charge"	VARCHAR(3) NOT NULL,
 		"timestamp"	datetime NOT NULL,
 		PRIMARY KEY("id" AUTOINCREMENT));`
 
