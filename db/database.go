@@ -39,7 +39,7 @@ func Init() {
 
 }
 
-func Insert(charge string, timestamp time.Time) {
+func Insert(charge int, timestamp time.Time) {
 	db, err := sql.Open("sqlite3", Path())
 	util.Check(err)
 	defer db.Close()
@@ -52,7 +52,23 @@ func Insert(charge string, timestamp time.Time) {
 
 	id, err := res.LastInsertId()
 
-	fmt.Printf("created timestamp (%d) %s%% at %s\n", id, charge, util.ParseTime(timestamp))
+	fmt.Printf("created timestamp (%d) %d%% at %s\n", id, charge, util.ParseTime(timestamp))
+}
+
+func Last() (id, charge int, timestamp time.Time) {
+	db, err := sql.Open("sqlite3", Path())
+	util.Check(err)
+	defer db.Close()
+	sqlStatement := "SELECT * FROM battery_charge WHERE id = (SELECT MAX(id) FROM battery_charge)"
+	rows, err := db.Query(sqlStatement)
+	util.Check(err)
+
+	if rows.Next() {
+		err = rows.Scan(&id, &charge, &timestamp)
+		util.Check(err)
+	}
+	rows.Close()
+	return id, charge, timestamp
 }
 
 func List() {
@@ -77,7 +93,7 @@ func List() {
 func createTable(batteryDB *sql.DB) {
 	createBatteryTable := `CREATE TABLE IF NOT EXISTS "battery_charge" (
 		"id"	INTEGER NOT NULL UNIQUE,
-		"charge"	VARCHAR(3) NOT NULL,
+		"charge"	INTEGER NOT NULL,
 		"timestamp"	datetime NOT NULL,
 		PRIMARY KEY("id" AUTOINCREMENT));`
 
