@@ -13,8 +13,8 @@ type BatteryStats struct {
 	Manufacturer       string
 	FullCapacityDesign int
 	FullCapacity       int
-	CurrentCharge      string
-	Cycles             string
+	CurrentCharge      int
+	Cycles             int
 	DischargeRate      float32
 	Status             string
 }
@@ -49,6 +49,8 @@ func Stats() BatteryStats {
 	// read capacity
 	currentCapacity, err := ioutil.ReadFile(ParameterPath("capacity"))
 	Check(err)
+	currentCharge, err := strconv.Atoi(TrimValue(currentCapacity))
+	Check(err)
 
 	// read dischargePower
 	dischargePower, err := ioutil.ReadFile(ParameterPath("power_now"))
@@ -56,7 +58,9 @@ func Stats() BatteryStats {
 	dischargeRate := ParseMilliWats(ParseBatteryValue(dischargePower))
 
 	// read cycles
-	cycles, err := ioutil.ReadFile(ParameterPath("cycle_count"))
+	cyclesStr, err := ioutil.ReadFile(ParameterPath("cycle_count"))
+	Check(err)
+	cycles, err := strconv.Atoi(TrimValue(cyclesStr))
 	Check(err)
 
 	// read manufacurer
@@ -72,10 +76,14 @@ func Stats() BatteryStats {
 		Status:             TrimValue(status),
 		FullCapacityDesign: ParseBatteryValue(fullCapacityDesign),
 		FullCapacity:       ParseBatteryValue(fullCapacity),
-		CurrentCharge:      string(TrimValue(currentCapacity)),
-		Cycles:             string(cycles),
+		CurrentCharge:      currentCharge,
+		Cycles:             cycles,
 		DischargeRate:      dischargeRate,
 	}
+}
+
+func CalculateDischarge(current, old int) int {
+	return old - current
 }
 
 func CalculateBatteryPercentage(current, full int) int {
