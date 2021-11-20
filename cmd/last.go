@@ -18,7 +18,7 @@ var lastCmd = &cobra.Command{
 	Short: "print discharge % since the last recorded timestamp",
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
-		currentCharge := util.Stats().CurrentCharge
+		currentCharge := util.Stats().Capacity
 		currentTime := time.Now()
 		_, charge, timestamp := db.Last()
 
