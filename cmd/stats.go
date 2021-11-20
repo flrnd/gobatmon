@@ -34,7 +34,8 @@ var statsCmd = &cobra.Command{
 		fmt.Printf("Energy full design : %0.2f Wh\n", stats.EnergyFullDesign)
 		fmt.Printf("Energy full        : %0.2f Wh\n", stats.EnergyFull)
 		fmt.Printf("Energy now         : %0.2f Wh\n", stats.EnergyNow)
-		fmt.Printf("Current capacity at: %d%% | Energy rate: %.2f W\n", stats.Capacity, stats.PowerNow)
+		fmt.Printf("Energy rate        : %.2f W\n", stats.PowerNow)
+		fmt.Printf("Charge             : %d%%", stats.Capacity)
 		fmt.Printf("Cycle count: %d\n", stats.Cycles)
 		fmt.Println()
 	},
