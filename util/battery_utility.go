@@ -74,7 +74,7 @@ func PowerNow() float32 {
 	return MilliWattsToWatts(ByteStringToInt(pn))
 }
 
-func Cycles() int {
+func CycleCount() int {
 	return InputByteArrayToInt("cycle_count")
 }
 
@@ -102,7 +102,7 @@ func Stats() BatteryStats {
 		EnergyFullDesign: EnergyFullDesign(),
 		FullCapacity:     EnergyFull(),
 		Capacity:         Capacity(),
-		Cycles:           Cycles(),
+		Cycles:           CycleCount(),
 		PowerNow:         PowerNow(),
 	}
 }
