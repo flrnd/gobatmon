@@ -39,13 +39,6 @@ func Stats() BatteryStats {
 	fullCapacity, err := ioutil.ReadFile(ParameterPath("energy_full"))
 	Check(err)
 
-	/*
-		 * Read the currentCharge battery value
-		currentCharge, err := ioutil.ReadFile(getParameterPath("energy_now"))
-		util.Check(err)
-		currentChargePercentage := util.CalculateBatteryPercentage(util.ParseBatteryValue(currentCharge), util.ParseBatteryValue(fullCapacity))
-	*/
-
 	// read capacity
 	currentCapacity, err := ioutil.ReadFile(ParameterPath("capacity"))
 	Check(err)
@@ -102,5 +95,5 @@ func ParseBatteryValue(d []byte) int {
 	v, err := strconv.Atoi(TrimValue(d))
 	Check(err)
 
-	return v / 1000
+	return v
 }
