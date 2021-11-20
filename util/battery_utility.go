@@ -29,7 +29,6 @@ type BatteryStats struct {
 	Cycles           int
 	PowerNow         float32
 	Status           string
-	Temp             int
 }
 
 const BATTERY_PATH = "/sys/class/power_supply/BAT0/"
