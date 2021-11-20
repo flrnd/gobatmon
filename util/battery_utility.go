@@ -25,6 +25,7 @@ type BatteryStats struct {
 	Manufacturer     string
 	EnergyFullDesign float32
 	EnergyFull       float32
+	EnergyNow        float32
 	Capacity         int
 	Cycles           int
 	PowerNow         float32
@@ -50,6 +51,13 @@ func EnergyFull() float32 {
 	Check(err)
 
 	// return value in Wh
+	return MilliWattsToWatts(ByteStringToInt(value) / 1000)
+}
+
+func EnergyNow() float32 {
+	value, err := ioutil.ReadFile(ParameterPath("energy_now"))
+	Check(err)
+
 	return MilliWattsToWatts(ByteStringToInt(value) / 1000)
 }
 
@@ -100,6 +108,7 @@ func Stats() BatteryStats {
 		Status:           Status(),
 		EnergyFullDesign: EnergyFullDesign(),
 		EnergyFull:       EnergyFull(),
+		EnergyNow:        EnergyNow(),
 		Capacity:         Capacity(),
 		Cycles:           CycleCount(),
 		PowerNow:         PowerNow(),
