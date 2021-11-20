@@ -24,7 +24,7 @@ var createCmd = &cobra.Command{
 	Short: "create a timestamp",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		currentCharge := util.Stats().CurrentCharge
+		currentCharge := util.Stats().Capacity
 		timestamp := time.Now()
 		db.Insert(currentCharge, timestamp)
 	},
