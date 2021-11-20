@@ -23,8 +23,8 @@ import (
 
 type BatteryStats struct {
 	Manufacturer     string
-	EnergyFullDesign int
-	FullCapacity     int
+	EnergyFullDesign float32
+	EnergyFull       float32
 	Capacity         int
 	Cycles           int
 	PowerNow         float32
@@ -37,20 +37,20 @@ func ParameterPath(p string) string {
 	return fmt.Sprintf("%s%s", BATTERY_PATH, p)
 }
 
-func EnergyFullDesign() int {
+func EnergyFullDesign() float32 {
 	value, err := ioutil.ReadFile(ParameterPath("energy_full_design"))
 	Check(err)
 
 	// return value in Wh
-	return ByteStringToInt(value) / 1000
+	return MilliWattsToWatts(ByteStringToInt(value) / 1000)
 }
 
-func EnergyFull() int {
+func EnergyFull() float32 {
 	value, err := ioutil.ReadFile(ParameterPath("energy_full"))
 	Check(err)
 
 	// return value in Wh
-	return ByteStringToInt(value) / 1000
+	return MilliWattsToWatts(ByteStringToInt(value) / 1000)
 }
 
 func Manufacturer() string {
@@ -70,7 +70,7 @@ func PowerNow() float32 {
 	Check(err)
 
 	//return value in W
-	return MilliWattsToWatts(ByteStringToInt(pn))
+	return MilliWattsToWatts(ByteStringToInt(pn) / 1000)
 }
 
 func CycleCount() int {
@@ -99,7 +99,7 @@ func Stats() BatteryStats {
 		Manufacturer:     Manufacturer(),
 		Status:           Status(),
 		EnergyFullDesign: EnergyFullDesign(),
-		FullCapacity:     EnergyFull(),
+		EnergyFull:       EnergyFull(),
 		Capacity:         Capacity(),
 		Cycles:           CycleCount(),
 		PowerNow:         PowerNow(),
