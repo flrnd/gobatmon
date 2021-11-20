@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 /*
@@ -116,6 +117,11 @@ func Stats() BatteryStats {
 }
 
 func CalculateDischarge(current, old int) int {
+	if (old - current) < 0 {
+		fmt.Printf("It seems you charged your battery since last recorded time.\n\n")
+		os.Exit(1)
+	}
+
 	return old - current
 }
 
@@ -141,4 +147,13 @@ func InputByteArrayToInt(s string) int {
 	Check(err)
 
 	return v
+}
+
+/*
+* Since time Duration is in nanoseconds, we need to work in nanoseconds
+* to calculate the discharge ratio.
+* d in this function is the discharge percentage, h time duration in nanoseconds
+ */
+func CalculateDischargeRatePerHour(d int, h time.Duration) float32 {
+	return float32(d) * 3600000000000 / float32(h)
 }
