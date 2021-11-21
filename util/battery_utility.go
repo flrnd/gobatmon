@@ -152,7 +152,7 @@ func InputByteArrayToInt(s string) int {
 /*
 * Since time Duration is in nanoseconds, we need to work in nanoseconds
 * to calculate the discharge ratio.
-* d in this function is the discharge percentage, h time duration in nanoseconds
+* d is discharge percentage, h time duration in nanoseconds
  */
 func CalculateDischargeRatePerHour(d int, h time.Duration) float32 {
 	return float32(d) * 3600000000000 / float32(h)
