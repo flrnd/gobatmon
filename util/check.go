@@ -1,7 +1,11 @@
 package util
 
+import (
+	"log"
+)
+
 func Check(e error) {
 	if e != nil {
-		panic(e)
+		log.Fatal(e)
 	}
 }
