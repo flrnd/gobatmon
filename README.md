@@ -45,3 +45,4 @@ Discharge ratio: 4.798Wh
 - [ ] Write systemd services for shutdown and boot.
 - [ ] Implement data schema for future graphs and analytics.
 - [ ] Add tests.
+- [ ] Find a name that doesn't sound stupid :D.
