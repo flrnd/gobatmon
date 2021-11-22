@@ -1,10 +1,9 @@
 # gobatmon
 
-gobatmon is a simple command line tool that I created to monitor and log battery discharges during long period of  storage.
+gobatmon is a simple command line tool that I created to monitor and log battery discharges during a period of time.
 
-The idea is to create a systemd service that logs the charge at shutdown and then calculate the discharge percentage during the time the laptop was off.
-
-It also prints basic information like number of cycles, full design capacity, etc.
+The original idea was to create a systemd service that logged the charge at shutdown and then calculate the discharge percentage during the time the laptop was off. 
+Right now you can create timestamps (Storing date and current charge), list saved timestamps and calculate discharge since last saved timestamp. It also prints basic information stats (like number of cycles, full design capacity, etc).
 
 examples:
 
