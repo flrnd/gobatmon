@@ -34,10 +34,11 @@ type BatteryStats struct {
 }
 
 type BatteryPeriod struct {
-	Timestamp      time.Time
-	Discharge      int
-	DischargeTime  time.Duration
-	DischargeRatio float32
+	Timestamp        time.Time
+	CurrentTimestamp time.Time
+	Discharge        int
+	DischargeTime    time.Duration
+	DischargeRatio   float32
 }
 
 const BATTERY_PATH = "/sys/class/power_supply/BAT0/"
@@ -123,23 +124,24 @@ func Stats() BatteryStats {
 	}
 }
 
-func DischargeStats(tStart time.Time, tEnd time.Time, charge int) (d int, dt time.Duration, dr float32) {
+func DischargeStats(timestamp time.Time, currentTimestamp time.Time, charge int) (d int, dt time.Duration, dr float32) {
 	currentCharge := Stats().Capacity
 	d = CalculateDischarge(currentCharge, charge)
-	dt = tEnd.Sub(tStart)
+	dt = currentTimestamp.Sub(timestamp)
 	dr = CalculateDischargeRatePerHour(d, dt)
 
 	return d, dt, dr
 }
 
-func NewPeriod(tStart time.Time, tEnd time.Time, charge int) BatteryPeriod {
-	discharge, dischargeTime, dischargeRatio := DischargeStats(tStart, tEnd, charge)
+func NewPeriod(timestamp time.Time, currentTimestamp time.Time, charge int) BatteryPeriod {
+	discharge, dischargeTime, dischargeRatio := DischargeStats(timestamp, currentTimestamp, charge)
 
 	return BatteryPeriod{
-		Timestamp:      tEnd,
-		Discharge:      discharge,
-		DischargeTime:  dischargeTime,
-		DischargeRatio: dischargeRatio,
+		Timestamp:        timestamp,
+		CurrentTimestamp: currentTimestamp,
+		Discharge:        discharge,
+		DischargeTime:    dischargeTime,
+		DischargeRatio:   dischargeRatio,
 	}
 }
 
