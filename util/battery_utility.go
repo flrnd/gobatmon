@@ -33,6 +33,13 @@ type BatteryStats struct {
 	Status           string
 }
 
+type BatteryPeriod struct {
+	Timestamp      time.Time
+	Discharge      int
+	DischargeTime  time.Duration
+	DischargeRatio float32
+}
+
 const BATTERY_PATH = "/sys/class/power_supply/BAT0/"
 
 func ParameterPath(p string) string {
@@ -114,6 +121,21 @@ func Stats() BatteryStats {
 		Cycles:           CycleCount(),
 		PowerNow:         PowerNow(),
 	}
+}
+
+func NewPeriod(t time.Time, d int, dt time.Duration, dr float32) *BatteryPeriod {
+	return &BatteryPeriod{
+		Timestamp:      t,
+		Discharge:      d,
+		DischargeTime:  dt,
+		DischargeRatio: dr,
+	}
+}
+
+func (p BatteryPeriod) Print() {
+	fmt.Printf("Discharge      : %d%%\n", p.Discharge)
+	fmt.Printf("Time elapsed   : %v\n", p.DischargeTime)
+	fmt.Printf("Discharge ratio: %0.3fWh\n", p.DischargeRatio)
 }
 
 func CalculateDischarge(current, old int) int {
