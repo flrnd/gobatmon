@@ -11,6 +11,7 @@ import (
 
 func init() {
 	rootCmd.AddCommand(lastCmd)
+	lastCmd.AddCommand(cmdSave)
 }
 
 var lastCmd = &cobra.Command{
