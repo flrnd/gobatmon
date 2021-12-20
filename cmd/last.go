@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/flrnd/gobatmon/db"
@@ -9,14 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type BatteryPeriod struct {
-	timestamp      time.Time
-	discharge      int
-	dischargeTime  time.Duration
-	dischargeRatio float32
-}
-
-var Period = BatteryPeriod{}
+var Period = util.BatteryPeriod{}
 
 func init() {
 	rootCmd.AddCommand(lastCmd)
@@ -32,13 +24,11 @@ var lastCmd = &cobra.Command{
 		currentTime := time.Now()
 		_, charge, timestamp := db.Last()
 
-		Period.timestamp = timestamp
-		Period.discharge = util.CalculateDischarge(currentCharge, charge)
-		Period.dischargeTime = currentTime.Sub(timestamp)
-		Period.dischargeRatio = util.CalculateDischargeRatePerHour(Period.discharge, Period.dischargeTime)
+		Period.Timestamp = timestamp
+		Period.Discharge = util.CalculateDischarge(currentCharge, charge)
+		Period.DischargeTime = currentTime.Sub(timestamp)
+		Period.DischargeRatio = util.CalculateDischargeRatePerHour(Period.Discharge, Period.DischargeTime)
 
-		fmt.Printf("Discharge      : %d%%\n", Period.discharge)
-		fmt.Printf("Time elapsed   : %v\n", Period.dischargeTime)
-		fmt.Printf("Discharge ratio: %0.3fWh\n", Period.dischargeRatio)
+		Period.Print()
 	},
 }
