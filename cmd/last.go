@@ -10,12 +10,13 @@ import (
 )
 
 type BatteryPeriod struct {
-	timestampStart int
-	timestampEnd   int
+	timestamp      time.Time
 	discharge      int
 	dischargeTime  time.Duration
 	dischargeRatio float32
 }
+
+var Period = BatteryPeriod{}
 
 func init() {
 	rootCmd.AddCommand(lastCmd)
@@ -31,10 +32,13 @@ var lastCmd = &cobra.Command{
 		currentTime := time.Now()
 		_, charge, timestamp := db.Last()
 
-		discharge := util.CalculateDischarge(currentCharge, charge)
-		dischargeTime := currentTime.Sub(timestamp)
-		fmt.Printf("Discharge      : %d%%\n", discharge)
-		fmt.Printf("Time elapsed   : %v\n", dischargeTime)
-		fmt.Printf("Discharge ratio: %0.3fWh\n", util.CalculateDischargeRatePerHour(discharge, dischargeTime))
+		Period.timestamp = timestamp
+		Period.discharge = util.CalculateDischarge(currentCharge, charge)
+		Period.dischargeTime = currentTime.Sub(timestamp)
+		Period.dischargeRatio = util.CalculateDischargeRatePerHour(Period.discharge, Period.dischargeTime)
+
+		fmt.Printf("Discharge      : %d%%\n", Period.discharge)
+		fmt.Printf("Time elapsed   : %v\n", Period.dischargeTime)
+		fmt.Printf("Discharge ratio: %0.3fWh\n", Period.dischargeRatio)
 	},
 }
