@@ -149,6 +149,7 @@ func (p BatteryPeriod) Print() {
 	fmt.Printf("Discharge      : %d%%\n", p.Discharge)
 	fmt.Printf("Time elapsed   : %v\n", p.DischargeTime)
 	fmt.Printf("Ratio: %0.3fWh\n", p.DischargeRatio)
+
 }
 
 func CalculateDischarge(current, old int) int {
