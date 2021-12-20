@@ -118,7 +118,8 @@ func Stats() BatteryStats {
 
 func CalculateDischarge(current, old int) int {
 	if (old - current) < 0 {
-		fmt.Printf("It seems you charged your battery since last recorded time.\n\n")
+		fmt.Printf("It seems you charged your battery since last recorded time.\n")
+		fmt.Printf("To start a new period run: gobatmon create.\n")
 		os.Exit(1)
 	}
 
