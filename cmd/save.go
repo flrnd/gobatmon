@@ -1,9 +1,10 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/flrnd/gobatmon/db"
 	"github.com/spf13/cobra"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var cmdSave = &cobra.Command{
@@ -11,6 +12,6 @@ var cmdSave = &cobra.Command{
 	Short: "Save last period",
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Saved")
+		db.SaveLastPeriod()
 	},
 }
