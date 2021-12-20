@@ -35,7 +35,7 @@ func Init() {
 	batteryDB, err := sql.Open("sqlite3", databasePath)
 	util.Check(err)
 	defer batteryDB.Close()
-	createTable(batteryDB)
+	createTables(batteryDB)
 
 }
 
@@ -90,16 +90,51 @@ func List() {
 	rows.Close()
 }
 
-func createTable(batteryDB *sql.DB) {
+func SaveLastPeriod() {
+	db, err := sql.Open("sqlite3", Path())
+	util.Check(err)
+	defer db.Close()
+
+	stmt, err := db.Prepare("INSERT INTO battery_last_period(timestamp_start, timestamp_end, discharge, discharge_ratio, last_charge) values(?,?,?,?,?)")
+	util.Check(err)
+
+	lastId, charge, timestamp := Last()
+	period := util.NewPeriod(timestamp, time.Now(), charge)
+
+	res, err := stmt.Exec(period.Timestamp, time.Now(), period.Discharge, period.DischargeRatio, lastId)
+	util.Check(err)
+
+	id, err := res.LastInsertId()
+
+	fmt.Printf("Saved (%d) %d%% elapsed: %v dr: %0.3fWh\n", id, period.Discharge, period.DischargeTime, period.DischargeRatio)
+}
+
+func createTables(batteryDB *sql.DB) {
 	createBatteryTable := `CREATE TABLE IF NOT EXISTS "battery_charge" (
 		"id"	INTEGER NOT NULL UNIQUE,
 		"charge"	INTEGER NOT NULL,
 		"timestamp"	datetime NOT NULL,
 		PRIMARY KEY("id" AUTOINCREMENT));`
 
-	if statement, err := batteryDB.Prepare(createBatteryTable); err != nil {
+	createBatteryPeriodTable := `CREATE TABLE IF NOT EXISTS "battery_last_period" (
+			"id" INTEGER NOT NULL UNIQUE,
+			"timestamp_start" datetime NOT NULL,
+			"timestamp_end" datetime NOT NULL,
+			"discharge" INTEGER NOT NULL,
+			"discharge_ratio" FLOAT NOT NULL,
+			"last_charge" INTEGER NOT NULL,
+			FOREIGN KEY(last_charge) REFERENCES battery_charge(id),
+			PRIMARY KEY("id" AUTOINCREMENT));`
+
+	if createBatteryTablestatement, err := batteryDB.Prepare(createBatteryTable); err != nil {
 		util.Check(err)
 	} else {
-		statement.Exec()
+		createBatteryTablestatement.Exec()
+	}
+
+	if createBatteryPeriodTableStatement, err := batteryDB.Prepare(createBatteryPeriodTable); err != nil {
+		util.Check(err)
+	} else {
+		createBatteryPeriodTableStatement.Exec()
 	}
 }
