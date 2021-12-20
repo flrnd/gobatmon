@@ -133,7 +133,7 @@ func ListSavedPeriods() {
 		fmt.Printf("From         : %s\n", util.ParseTime(timestamp))
 		fmt.Printf("To           : %s\n", util.ParseTime(currentTimestamp))
 		fmt.Printf("Time elapsed : %v\n", currentTimestamp.Sub(timestamp).String())
-		fmt.Printf("Ratio        : %0.3fWh\n", dischargeRatio)
+		fmt.Printf("Ratio        : %0.3fWh\n\n", dischargeRatio)
 	}
 	rows.Close()
 }
