@@ -118,6 +118,10 @@ func ListSavedPeriods() {
 	rows, err := db.Query("SELECT * FROM battery_last_period")
 	util.Check(err)
 
+	if !rows.Next() {
+		fmt.Println("No saved periods found.")
+	}
+
 	for rows.Next() {
 		var id int
 		var timestamp time.Time
