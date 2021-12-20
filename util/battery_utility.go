@@ -148,7 +148,7 @@ func NewPeriod(timestamp time.Time, currentTimestamp time.Time, charge int) Batt
 func (p BatteryPeriod) Print() {
 	fmt.Printf("Discharge      : %d%%\n", p.Discharge)
 	fmt.Printf("Time elapsed   : %v\n", p.DischargeTime)
-	fmt.Printf("Discharge ratio: %0.3fWh\n", p.DischargeRatio)
+	fmt.Printf("Ratio: %0.3fWh\n", p.DischargeRatio)
 }
 
 func CalculateDischarge(current, old int) int {
