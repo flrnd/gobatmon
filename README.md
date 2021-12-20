@@ -26,10 +26,13 @@ created timestamp (7) 59% at 2021-11-22 14:39:50
 ```
 
 ```shell
-$ gobatmon list  
+$ gobatmon list
 id: 1 charge: 59% created: 2021-11-19 20:38:55
 id: 2 charge: 61% created: 2021-11-20 11:05:27
 id: 3 charge: 60% created: 2021-11-20 11:08:32
+
+$ gobatmon list saved
+
 ```
 
 ```shell
@@ -37,6 +40,9 @@ $ gobatmon last
 Discharge      : 23%
 Time elapsed   : 4h47m38.972305457s
 Discharge ratio: 4.798Wh
+
+$ gobatmon last save
+
 ```
 
 ## TODO

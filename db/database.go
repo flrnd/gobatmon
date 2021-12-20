@@ -118,10 +118,6 @@ func ListSavedPeriods() {
 	rows, err := db.Query("SELECT * FROM battery_last_period")
 	util.Check(err)
 
-	if !rows.Next() {
-		fmt.Println("No saved periods found.")
-	}
-
 	for rows.Next() {
 		var id int
 		var timestamp time.Time
@@ -132,7 +128,12 @@ func ListSavedPeriods() {
 		err = rows.Scan(&id, &timestamp, &currentTimestamp, &discharge, &dischargeRatio, &lastId)
 		util.Check(err)
 
-		fmt.Printf("id: %d discharge: %d%% tStart: %s tEnd: %s duration: %v ratio: %0.3f lastId: %d\n", id, discharge, util.ParseTime(timestamp), util.ParseTime(currentTimestamp), currentTimestamp.Sub(timestamp).String(), dischargeRatio, lastId)
+		fmt.Printf("id: %d | lastId: %d\n", id, lastId)
+		fmt.Printf("Discharge    : %d%%\n", discharge)
+		fmt.Printf("From         : %s\n", util.ParseTime(timestamp))
+		fmt.Printf("To           : %s\n", util.ParseTime(currentTimestamp))
+		fmt.Printf("Time elapsed : %v\n", currentTimestamp.Sub(timestamp).String())
+		fmt.Printf("Ratio        : %0.3fWh\n", dischargeRatio)
 	}
 	rows.Close()
 }
