@@ -10,11 +10,6 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-type BatteryStamp struct {
-	charge    int
-	timestamp int
-}
-
 func init() {
 	rootCmd.AddCommand(createCmd)
 }
