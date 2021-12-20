@@ -99,14 +99,38 @@ func SaveLastPeriod() {
 	util.Check(err)
 
 	lastId, charge, timestamp := Last()
-	period := util.NewPeriod(timestamp, time.Now(), charge)
+	currentTimestamp := time.Now()
+	period := util.NewPeriod(timestamp, currentTimestamp, charge)
 
-	res, err := stmt.Exec(period.Timestamp, time.Now(), period.Discharge, period.DischargeRatio, lastId)
+	res, err := stmt.Exec(period.Timestamp, period.CurrentTimestamp, period.Discharge, period.DischargeRatio, lastId)
 	util.Check(err)
 
 	id, err := res.LastInsertId()
 
 	fmt.Printf("Saved (%d) %d%% elapsed: %v dr: %0.3fWh\n", id, period.Discharge, period.DischargeTime, period.DischargeRatio)
+}
+
+func ListSavedPeriods() {
+	db, err := sql.Open("sqlite3", Path())
+	util.Check(err)
+	defer db.Close()
+
+	rows, err := db.Query("SELECT * FROM battery_last_period")
+	util.Check(err)
+
+	for rows.Next() {
+		var id int
+		var timestamp time.Time
+		var currentTimestamp time.Time
+		var discharge int
+		var dischargeRatio float32
+		var lastId int
+		err = rows.Scan(&id, &timestamp, &currentTimestamp, &discharge, &dischargeRatio, &lastId)
+		util.Check(err)
+
+		fmt.Printf("id: %d discharge: %d%% tStart: %s tEnd: %s duration: %v ratio: %0.3f lastId: %d\n", id, discharge, util.ParseTime(timestamp), util.ParseTime(currentTimestamp), currentTimestamp.Sub(timestamp).String(), dischargeRatio, lastId)
+	}
+	rows.Close()
 }
 
 func createTables(batteryDB *sql.DB) {
