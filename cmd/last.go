@@ -9,6 +9,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type BatteryPeriod struct {
+	timestampStart int
+	timestampEnd   int
+	discharge      int
+	dischargeTime  time.Duration
+	dischargeRatio float32
+}
+
 func init() {
 	rootCmd.AddCommand(lastCmd)
 	lastCmd.AddCommand(cmdSave)
