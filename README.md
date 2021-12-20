@@ -32,6 +32,19 @@ id: 2 charge: 61% created: 2021-11-20 11:05:27
 id: 3 charge: 60% created: 2021-11-20 11:08:32
 
 $ gobatmon list saved
+id: 1 | lastId: 1
+Discharge    : 1%
+From         : 2021-12-20 16:32:42
+To           : 2021-12-20 16:37:29
+Time elapsed : 4m46.298353448s
+Ratio        : 12.574Wh
+
+id: 2 | lastId: 1
+Discharge    : 4%
+From         : 2021-12-20 16:32:42
+To           : 2021-12-20 16:56:16
+Time elapsed : 23m34.063440814s
+Ratio        : 10.183Wh
 
 ```
 
@@ -42,6 +55,7 @@ Time elapsed   : 4h47m38.972305457s
 Discharge ratio: 4.798Wh
 
 $ gobatmon last save
+Saved (2) 4% elapsed: 23m34.063440814s dr: 10.183Wh
 
 ```
 
