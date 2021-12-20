@@ -12,8 +12,8 @@ func init() {
 
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "list all timestamps",
-	Long:  ``,
+	Short: "list all timestamps. [help list] for more information.",
+	Long:  "Output all stored timestamps. list saved shows stored discharging periods.",
 	Run: func(cmd *cobra.Command, args []string) {
 		db.List()
 	},
