@@ -123,12 +123,23 @@ func Stats() BatteryStats {
 	}
 }
 
-func NewPeriod(t time.Time, d int, dt time.Duration, dr float32) *BatteryPeriod {
-	return &BatteryPeriod{
-		Timestamp:      t,
-		Discharge:      d,
-		DischargeTime:  dt,
-		DischargeRatio: dr,
+func DischargeStats(tStart time.Time, tEnd time.Time, charge int) (d int, dt time.Duration, dr float32) {
+	currentCharge := Stats().Capacity
+	d = CalculateDischarge(currentCharge, charge)
+	dt = tEnd.Sub(tStart)
+	dr = CalculateDischargeRatePerHour(d, dt)
+
+	return d, dt, dr
+}
+
+func NewPeriod(tStart time.Time, tEnd time.Time, charge int) BatteryPeriod {
+	discharge, dischargeTime, dischargeRatio := DischargeStats(tStart, tEnd, charge)
+
+	return BatteryPeriod{
+		Timestamp:      tEnd,
+		Discharge:      discharge,
+		DischargeTime:  dischargeTime,
+		DischargeRatio: dischargeRatio,
 	}
 }
 
