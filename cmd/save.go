@@ -2,16 +2,15 @@ package cmd
 
 import (
 	"github.com/flrnd/gobatmon/db"
-	"github.com/spf13/cobra"
-
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/muesli/coral"
 )
 
-var cmdSave = &cobra.Command{
+var cmdSave = &coral.Command{
 	Use:   "save",
 	Short: "Save last period",
 	Long:  "",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *coral.Command, args []string) {
 		db.SaveLastPeriod()
 	},
 }
