@@ -6,19 +6,19 @@ import (
 	"os"
 
 	"github.com/flrnd/gobatmon/util"
-	"github.com/spf13/cobra"
+	"github.com/muesli/coral"
 )
 
 func init() {
 	rootCmd.AddCommand(statsCmd)
 }
 
-var statsCmd = &cobra.Command{
+var statsCmd = &coral.Command{
 	Use:   "stats",
 	Short: "print battery stats",
 	Long: `Print battery stats like full charge
 								design capacity, current charge, current discharge rate...`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *coral.Command, args []string) {
 		// check if the battery is present
 		if _, err := os.Stat(util.ParameterPath("present")); os.IsNotExist(err) {
 			log.Fatal("No battery on this system")
