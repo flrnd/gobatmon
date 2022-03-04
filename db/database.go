@@ -71,6 +71,18 @@ func Delete(columnId int, table string) {
 	fmt.Printf("Deleted %d timestamp (id=%d)\n", id, columnId)
 }
 
+func DeleteAll() {
+	db, err := sql.Open("sqlite3", Path())
+	util.Check(err)
+	defer db.Close()
+
+	res, err := db.Exec("DELETE FROM battery_charge")
+	util.Check(err)
+
+	id, _ := res.RowsAffected()
+	fmt.Printf("Deleted %d timestamp(s)\n", id)
+}
+
 func Last() (id, charge int, timestamp time.Time) {
 	db, err := sql.Open("sqlite3", Path())
 	util.Check(err)
