@@ -55,6 +55,34 @@ func Insert(charge int, timestamp time.Time) {
 	fmt.Printf("created timestamp (%d) %d%% at %s\n", id, charge, util.ParseTime(timestamp))
 }
 
+func Delete(columnId int, table string) {
+	db, err := sql.Open("sqlite3", Path())
+	util.Check(err)
+	defer db.Close()
+
+	stmt := fmt.Sprintf("DELETE FROM %s WHERE id = %d", table, columnId)
+	util.Check(err)
+
+	res, err := db.Exec(stmt)
+	util.Check(err)
+
+	id, _ := res.RowsAffected()
+
+	fmt.Printf("Deleted %d timestamp (id=%d)\n", id, columnId)
+}
+
+func DeleteAll() {
+	db, err := sql.Open("sqlite3", Path())
+	util.Check(err)
+	defer db.Close()
+
+	res, err := db.Exec("DELETE FROM battery_charge")
+	util.Check(err)
+
+	id, _ := res.RowsAffected()
+	fmt.Printf("Deleted %d timestamp(s)\n", id)
+}
+
 func Last() (id, charge int, timestamp time.Time) {
 	db, err := sql.Open("sqlite3", Path())
 	util.Check(err)
