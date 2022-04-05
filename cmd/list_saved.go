@@ -2,14 +2,14 @@ package cmd
 
 import (
 	"github.com/flrnd/gobatmon/db"
-	"github.com/muesli/coral"
+	"github.com/spf13/cobra"
 )
 
-var savedCmd = &coral.Command{
+var savedCmd = &cobra.Command{
 	Use:   "saved",
 	Short: "list all saved periods",
 	Long:  ``,
-	Run: func(cmd *coral.Command, args []string) {
+	Run: func(cmd *cobra.Command, args []string) {
 		db.ListSavedPeriods()
 	},
 }

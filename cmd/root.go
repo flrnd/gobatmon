@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/muesli/coral"
+	"github.com/spf13/cobra"
 )
 
-var rootCmd = &coral.Command{Use: "gobatmon"}
+var rootCmd = &cobra.Command{Use: "gobatmon"}
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {

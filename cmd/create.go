@@ -6,18 +6,18 @@ import (
 	"github.com/flrnd/gobatmon/db"
 	"github.com/flrnd/gobatmon/util"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/muesli/coral"
+	"github.com/spf13/cobra"
 )
 
 func init() {
 	rootCmd.AddCommand(createCmd)
 }
 
-var createCmd = &coral.Command{
+var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "create a timestamp",
 	Long:  ``,
-	Run: func(cmd *coral.Command, args []string) {
+	Run: func(cmd *cobra.Command, args []string) {
 		currentCharge := util.Stats().Capacity
 		timestamp := time.Now()
 		db.Insert(currentCharge, timestamp)
