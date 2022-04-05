@@ -15,6 +15,6 @@ var versionCmd = &cobra.Command{
 	Short: "Print the version number of gobatmon",
 	Long:  `All software has versions.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("gobatmon v0.1")
+		fmt.Println("gobatmon v0.1.1")
 	},
 }
