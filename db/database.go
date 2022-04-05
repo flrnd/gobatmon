@@ -51,6 +51,7 @@ func Insert(charge int, timestamp time.Time) {
 	util.Check(err)
 
 	id, err := res.LastInsertId()
+	util.Check(err)
 
 	fmt.Printf("created timestamp (%d) %d%% at %s\n", id, charge, util.ParseTime(timestamp))
 }
@@ -134,6 +135,7 @@ func SaveLastPeriod() {
 	util.Check(err)
 
 	id, err := res.LastInsertId()
+	util.Check(err)
 
 	fmt.Printf("Saved (%d) %d%% elapsed: %v dr: %0.3fWh\n", id, period.Discharge, period.DischargeTime, period.DischargeRatio)
 }
