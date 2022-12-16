@@ -61,10 +61,3 @@ Saved (2) 4% elapsed: 23m34.063440814s dr: 10.183Wh
 
 ```
 
-## TODO
-
-- [ ] Create project with proper issues and tasks.
-- [ ] Write systemd services for shutdown and boot.
-- [ ] Implement data schema for future graphs and analytics.
-- [ ] Add tests.
-- [ ] Find a name that doesn't sound stupid :D.
