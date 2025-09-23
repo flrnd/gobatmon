@@ -1,3 +1,4 @@
+// Package db implements database handling
 package db
 
 import (
@@ -9,12 +10,12 @@ import (
 	"github.com/flrnd/gobatmon/util"
 )
 
-const defaultDbPath = "/.config/batmon/battery.db"
+const defaultDBPath = "/.config/batmon/battery.db"
 
 func Path() string {
 	homeDir, _ := os.UserHomeDir()
 
-	return homeDir + defaultDbPath
+	return homeDir + defaultDBPath
 }
 
 func Init() {
@@ -22,7 +23,7 @@ func Init() {
 	databasePath := Path()
 
 	if _, err := os.Stat(databasePath); os.IsNotExist(err) {
-		os.MkdirAll(homeDir+"/.config/batmon", 0755)
+		os.MkdirAll(homeDir+"/.config/batmon", 0o755)
 		// log.Println("Creating the database")
 		file, err := os.Create(databasePath)
 		util.Check(err)
@@ -31,12 +32,10 @@ func Init() {
 		// log.Println("Database created")
 	}
 
-	// Open the database
 	batteryDB, err := sql.Open("sqlite3", databasePath)
 	util.Check(err)
 	defer batteryDB.Close()
 	createTables(batteryDB)
-
 }
 
 func Insert(charge int, timestamp time.Time) {
@@ -56,12 +55,12 @@ func Insert(charge int, timestamp time.Time) {
 	fmt.Printf("created timestamp (%d) %d%% at %s\n", id, charge, util.ParseTime(timestamp))
 }
 
-func Delete(columnId int, table string) {
+func Delete(columnID int, table string) {
 	db, err := sql.Open("sqlite3", Path())
 	util.Check(err)
 	defer db.Close()
 
-	stmt := fmt.Sprintf("DELETE FROM %s WHERE id = %d", table, columnId)
+	stmt := fmt.Sprintf("DELETE FROM %s WHERE id = %d", table, columnID)
 	util.Check(err)
 
 	res, err := db.Exec(stmt)
@@ -69,7 +68,7 @@ func Delete(columnId int, table string) {
 
 	id, _ := res.RowsAffected()
 
-	fmt.Printf("Deleted %d timestamp (id=%d)\n", id, columnId)
+	fmt.Printf("Deleted %d timestamp (id=%d)\n", id, columnID)
 }
 
 func DeleteAll() {
@@ -127,11 +126,11 @@ func SaveLastPeriod() {
 	stmt, err := db.Prepare("INSERT INTO battery_last_period(timestamp_start, timestamp_end, discharge, discharge_ratio, last_charge) values(?,?,?,?,?)")
 	util.Check(err)
 
-	lastId, charge, timestamp := Last()
+	lastID, charge, timestamp := Last()
 	currentTimestamp := time.Now()
 	period := util.NewPeriod(timestamp, currentTimestamp, charge)
 
-	res, err := stmt.Exec(period.Timestamp, period.CurrentTimestamp, period.Discharge, period.DischargeRatio, lastId)
+	res, err := stmt.Exec(period.Timestamp, period.CurrentTimestamp, period.Discharge, period.DischargeRatio, lastID)
 	util.Check(err)
 
 	id, err := res.LastInsertId()
@@ -154,11 +153,11 @@ func ListSavedPeriods() {
 		var currentTimestamp time.Time
 		var discharge int
 		var dischargeRatio float32
-		var lastId int
-		err = rows.Scan(&id, &timestamp, &currentTimestamp, &discharge, &dischargeRatio, &lastId)
+		var lastID int
+		err = rows.Scan(&id, &timestamp, &currentTimestamp, &discharge, &dischargeRatio, &lastID)
 		util.Check(err)
 
-		fmt.Printf("id: %d | lastId: %d\n", id, lastId)
+		fmt.Printf("id: %d | lastId: %d\n", id, lastID)
 		fmt.Printf("Discharge    : %d%%\n", discharge)
 		fmt.Printf("From         : %s\n", util.ParseTime(timestamp))
 		fmt.Printf("To           : %s\n", util.ParseTime(currentTimestamp))

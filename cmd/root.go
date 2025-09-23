@@ -1,3 +1,4 @@
+// Package cmd implements basic cli commands
 package cmd
 
 import (

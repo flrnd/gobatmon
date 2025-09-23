@@ -1,8 +1,8 @@
+// Package util implements helpers to handle kernel battery data
 package util
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
@@ -41,38 +41,35 @@ type BatteryPeriod struct {
 	DischargeRatio   float32
 }
 
-const BATTERY_PATH = "/sys/class/power_supply/BAT0/"
+const BatteryPath = "/sys/class/power_supply/BAT0/"
 
 func ParameterPath(p string) string {
-	return fmt.Sprintf("%s%s", BATTERY_PATH, p)
+	return fmt.Sprintf("%s%s", BatteryPath, p)
 }
 
 func EnergyFullDesign() float32 {
-	value, err := ioutil.ReadFile(ParameterPath("energy_full_design"))
+	value, err := os.ReadFile(ParameterPath("energy_full_design"))
 	Check(err)
 
-	// return value in Wh
 	return MilliWattsToWatts(ByteStringToInt(value) / 1000)
 }
 
 func EnergyFull() float32 {
-	value, err := ioutil.ReadFile(ParameterPath("energy_full"))
+	value, err := os.ReadFile(ParameterPath("energy_full"))
 	Check(err)
 
-	// return value in Wh
 	return MilliWattsToWatts(ByteStringToInt(value) / 1000)
 }
 
 func EnergyNow() float32 {
-	value, err := ioutil.ReadFile(ParameterPath("energy_now"))
+	value, err := os.ReadFile(ParameterPath("energy_now"))
 	Check(err)
 
 	return MilliWattsToWatts(ByteStringToInt(value) / 1000)
 }
 
 func Manufacturer() string {
-	// read manufacurer
-	value, err := ioutil.ReadFile(ParameterPath("manufacturer"))
+	value, err := os.ReadFile(ParameterPath("manufacturer"))
 	Check(err)
 
 	return ByteStringToString(value)
@@ -83,10 +80,9 @@ func Capacity() int {
 }
 
 func PowerNow() float32 {
-	pn, err := ioutil.ReadFile(ParameterPath("power_now"))
+	pn, err := os.ReadFile(ParameterPath("power_now"))
 	Check(err)
 
-	//return value in W
 	return MilliWattsToWatts(ByteStringToInt(pn) / 1000)
 }
 
@@ -95,14 +91,13 @@ func CycleCount() int {
 }
 
 func Status() string {
-	status, err := ioutil.ReadFile(ParameterPath("status"))
+	status, err := os.ReadFile(ParameterPath("status"))
 	Check(err)
 
 	return ByteStringToString(status)
 }
 
 func CheckBattery() {
-	// check if the battery is present
 	if _, err := os.Stat(ParameterPath("present")); os.IsNotExist(err) {
 		log.Fatal("No battery on this system")
 		os.Exit(1)
@@ -149,7 +144,6 @@ func (p BatteryPeriod) Print() {
 	fmt.Printf("Discharge      : %d%%\n", p.Discharge)
 	fmt.Printf("Time elapsed   : %v\n", p.DischargeTime)
 	fmt.Printf("Ratio: %0.3fWh\n", p.DischargeRatio)
-
 }
 
 func CalculateDischarge(current, old int) int {
@@ -178,7 +172,7 @@ func ByteStringToInt(d []byte) int {
 }
 
 func InputByteArrayToInt(s string) int {
-	is, err := ioutil.ReadFile(ParameterPath(s))
+	is, err := os.ReadFile(ParameterPath(s))
 	Check(err)
 	v, err := strconv.Atoi(ByteStringToString(is))
 	Check(err)
@@ -186,11 +180,12 @@ func InputByteArrayToInt(s string) int {
 	return v
 }
 
-/*
-* Since time Duration is in nanoseconds, we need to work in nanoseconds
-* to calculate the discharge ratio.
-* d is discharge percentage, h time duration in nanoseconds
- */
 func CalculateDischargeRatePerHour(d int, h time.Duration) float32 {
+	/*
+	 * Since time Duration is in nanoseconds, we need to work in nanoseconds
+	 * to calculate the discharge ratio.
+	 * d is discharge percentage, h time duration in nanoseconds
+	 */
+
 	return float32(d) * 3600000000000 / float32(h)
 }
