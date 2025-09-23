@@ -25,8 +25,8 @@ var deleteCmd = &cobra.Command{
 			fmt.Printf("Missing id.\nExample Usage: gobatmon delete 3\n")
 			os.Exit(1)
 		}
-		intVarId, err := strconv.Atoi(args[0])
+		intVarID, err := strconv.Atoi(args[0])
 		util.Check(err)
-		db.Delete(intVarId, "battery_charge")
+		db.Delete(intVarID, "battery_charge")
 	},
 }

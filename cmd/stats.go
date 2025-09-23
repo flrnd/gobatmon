@@ -19,7 +19,6 @@ var statsCmd = &cobra.Command{
 	Long: `Print battery stats like full charge
 								design capacity, current charge, current discharge rate...`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// check if the battery is present
 		if _, err := os.Stat(util.ParameterPath("present")); os.IsNotExist(err) {
 			log.Fatal("No battery on this system")
 			os.Exit(1)
@@ -27,7 +26,6 @@ var statsCmd = &cobra.Command{
 
 		stats := util.Stats()
 
-		// print the battery stats
 		fmt.Println()
 		fmt.Printf("Manufacturer: %s\n", stats.Manufacturer)
 		fmt.Printf("Status: %s\n", stats.Status)
